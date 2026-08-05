@@ -1,4 +1,6 @@
 <script setup>
+import ProgressBar from '../common/ProgressBar.vue';
+
 defineProps({
     course: Object
 })
@@ -8,7 +10,7 @@ defineProps({
     <div class="card">
         <h3>{{ course.title }}</h3>
         <p>{{ course.level }}</p>
-        <div>Progress: {{ course.progress }}%</div>
+        <ProgressBar :progress="course.progress" />
 
     </div>
 </template>
