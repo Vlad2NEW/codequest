@@ -1,4 +1,4 @@
-import {createRouter, createWebHistory} from 'vue-router';
+import { createRouter, createWebHistory } from 'vue-router';
 
 import HomeView from '../views/HomeView.vue';
 import CoursesView from '../views/CoursesView.vue';
@@ -11,18 +11,22 @@ const router = createRouter({
     routes: [
         {
             path: '/',
+            name: 'home',
             component: HomeView
         },
         {
             path: '/courses',
+            name: 'courses',
             component: CoursesView
         },
         {
-            path:'/profile',
+            path: '/profile',
+            name: 'profile',
             component: ProfileView
         },
         {
-            path:'/404',
+            path: '/:pathMatch(.*)*',
+            name: 'not-found',
             component: NotFoundView
         }
     ]
