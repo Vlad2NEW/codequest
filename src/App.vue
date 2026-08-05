@@ -1,10 +1,9 @@
 <script setup>
-import Header from "./components/layout/Header.vue"
-import Sidebar from "./components/layout/Sidebar.vue";
+import MainLayout from './components/layout/MainLayout.vue';
 </script>
 
 <template>
-  <Header />
-  <Sidebar />
-  <RouterView />
+  <MainLayout>
+    <RouterView />
+  </MainLayout>
 </template>
