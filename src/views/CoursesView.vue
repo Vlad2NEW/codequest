@@ -10,7 +10,9 @@
 
 <script setup>
 import CourseCard from '../components/courses/CourseCard.vue'
-import { courses } from '../services/courses'
+import { getCourses } from '../services/courses'
+
+const courses = getCourses()
 </script>
 
 <style scoped>

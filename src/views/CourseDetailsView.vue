@@ -1,11 +1,11 @@
 <script setup>
 import { useRoute } from 'vue-router'
-import { courses } from '../services/courses'
+import { getCourseById } from '../services/courses'
+
 const route = useRoute()
 
 const courseId = route.params.id
-
-const course = courses.find(course => course.id === Number(courseId))
+const course = getCourseById(courseId)
 </script>
 
 <template>

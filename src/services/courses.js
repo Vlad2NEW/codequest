@@ -1,4 +1,4 @@
-export const courses = [
+const courses = [
     {
         id: 1,
         title: "Vue.js",
@@ -14,3 +14,13 @@ export const courses = [
         description: "JS advanced concepts"
     }
 ]
+
+
+export function getCourses() {
+    return courses
+}
+
+
+export function getCourseById(id) {
+    return courses.find(course => course.id === Number(id))
+}
