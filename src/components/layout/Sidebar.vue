@@ -1,7 +1,8 @@
 <template>
     <aside>
         <nav>
-            <RouterLink v-for="item in menuItems" :key="item.path" :to="item.path">
+            <RouterLink v-for="item in menuItems" :key="item.path" :to="item.path"
+                :class="{ active: isActive(item.path) }">
                 {{ item.title }}
             </RouterLink>
         </nav>
@@ -9,6 +10,7 @@
 </template>
 
 <script setup>
+import { useRoute } from 'vue-router';
 
 const menuItems = [
     {
@@ -23,9 +25,13 @@ const menuItems = [
         title: "Профіль",
         path: "/profile"
     }
-]
+];
 
+const route = useRoute();
 
+function isActive(path) {
+    return path === route.path;
+}
 </script>
 
 <style scoped>
@@ -54,5 +60,9 @@ a {
 
 a:hover {
     background-color: #f0f0f0;
+}
+
+.active {
+    font-weight: bold;
 }
 </style>
