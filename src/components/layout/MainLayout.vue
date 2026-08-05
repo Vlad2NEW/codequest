@@ -9,7 +9,7 @@ import Sidebar from './Sidebar.vue';
     <div class="layout">
         <Sidebar />
 
-        <main>
+        <main class="content">
             <slot />
         </main>
     </div>
@@ -20,7 +20,7 @@ import Sidebar from './Sidebar.vue';
     display: flex;
 }
 
-main {
+.content {
     flex: 1;
     padding: 20px;
 }
