@@ -4,6 +4,7 @@ import HomeView from '../views/HomeView.vue';
 import CoursesView from '../views/CoursesView.vue';
 import ProfileView from '../views/ProfileView.vue';
 import NotFoundView from '../views/NotFoundView.vue';
+import CourseDetailsView from '../views/CourseDetailsView.vue'
 
 const router = createRouter({
     history: createWebHistory(),
@@ -23,6 +24,11 @@ const router = createRouter({
             path: '/profile',
             name: 'profile',
             component: ProfileView
+        },
+        {
+            path: '/courses/:id',
+            name: 'course-details',
+            component: CourseDetailsView
         },
         {
             path: '/:pathMatch(.*)*',
