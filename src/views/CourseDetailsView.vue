@@ -1,26 +1,9 @@
 <script setup>
 import { useRoute } from 'vue-router'
-
+import { courses } from '../services/courses'
 const route = useRoute()
 
 const courseId = route.params.id
-
-const courses = [
-    {
-        id: 1,
-        title: "Vue.js",
-        level: "Beginner",
-        progress: 40,
-        description: "Vue 3, компоненти, router"
-    },
-    {
-        id: 2,
-        title: "JavaScript",
-        level: "Advanced",
-        progress: 70,
-        description: "JS advanced concepts"
-    }
-]
 
 const course = courses.find(course => course.id === Number(courseId))
 </script>

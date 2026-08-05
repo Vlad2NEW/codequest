@@ -10,21 +10,7 @@
 
 <script setup>
 import CourseCard from '../components/courses/CourseCard.vue'
-
-const courses = [
-    {
-        id: 1,
-        title: "Vue.js",
-        level: "Beginner",
-        progress: 40
-    },
-    {
-        id: 2,
-        title: "JavaScript",
-        level: "Advanced",
-        progress: 70
-    }
-]
+import { courses } from '../services/courses'
 </script>
 
 <style scoped>
