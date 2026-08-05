@@ -1,17 +1,13 @@
 <template>
     <aside>
         <nav>
-            <RouterLink v-for="item in menuItems" :key="item.path" :to="item.path"
-                :class="{ active: isActive(item.path) }">
-                {{ item.title }}
-            </RouterLink>
+            <MenuItem :item="item" v-for="item in menuItems" :key="item.path" />
         </nav>
     </aside>
 </template>
 
 <script setup>
-import { useRoute } from 'vue-router';
-
+import MenuItem from '../common/MenuItem.vue';
 const menuItems = [
     {
         title: "Головна",
@@ -27,11 +23,6 @@ const menuItems = [
     }
 ];
 
-const route = useRoute();
-
-function isActive(path) {
-    return path === route.path;
-}
 </script>
 
 <style scoped>
@@ -47,22 +38,5 @@ nav {
     display: flex;
     flex-direction: column;
     gap: 12px;
-}
-
-a {
-    padding: 10px 15px;
-
-    text-decoration: none;
-    border-radius: 8px;
-
-    transition: background-color 0.2s;
-}
-
-a:hover {
-    background-color: #f0f0f0;
-}
-
-.active {
-    font-weight: bold;
 }
 </style>
