@@ -20,9 +20,10 @@ const { user } = storeToRefs(authStore)
 
 
 const {
-    userCourses,
+    courses,
     completedCourses,
     averageProgress
+
 } = storeToRefs(courseStore)
 
 
@@ -64,39 +65,82 @@ function saveProfile() {
 <template>
 
 
-    <div class="profile">
+<div class="profile">
 
 
-        <div class="user-card">
+    <div class="user-card">
 
 
-            <div class="avatar">
+        <div class="avatar">
 
-                {{ user.avatar }}
+            {{ user.avatar }}
 
-            </div>
-
-
-
-            <div>
-
-                <h1>
-                    {{ user.name }}
-                </h1>
+        </div>
 
 
-                <p>
-                    {{ user.email }}
-                </p>
+
+        <div>
+
+            <h1>
+                {{ user.name }}
+            </h1>
 
 
-                <p>
-                    Зареєстрований:
-                    {{ user.joined }}
-                </p>
+            <p>
+                {{ user.email }}
+            </p>
 
 
-            </div>
+            <p>
+                Зареєстрований:
+                {{ user.joined }}
+            </p>
+
+
+        </div>
+
+
+    </div>
+
+
+
+
+    <div class="edit">
+
+
+        <input
+            v-model="name"
+            placeholder="Нове ім'я"
+        >
+
+
+        <button @click="saveProfile">
+
+            Зберегти
+
+        </button>
+
+
+    </div>
+
+
+
+
+
+    <div class="stats">
+
+
+        <div class="card">
+
+
+            <h2>
+                {{ courses.length }}
+            </h2>
+
+
+            <p>
+                Курсів
+            </p>
 
 
         </div>
@@ -104,17 +148,18 @@ function saveProfile() {
 
 
 
-        <div class="edit">
+
+        <div class="card">
 
 
-            <input v-model="name" placeholder="Нове ім'я">
+            <h2>
+                {{ completedCourses.length }}
+            </h2>
 
 
-            <button @click="saveProfile">
-
-                Зберегти
-
-            </button>
+            <p>
+                Завершено
+            </p>
 
 
         </div>
@@ -123,62 +168,17 @@ function saveProfile() {
 
 
 
-        <div class="stats">
+        <div class="card">
 
 
-            <div class="card">
+            <h2>
+                {{ averageProgress }}%
+            </h2>
 
 
-                <h2>
-                    {{ userCourses.length }}
-                </h2>
-
-
-                <p>
-                    Курсів
-                </p>
-
-
-            </div>
-
-
-
-
-
-            <div class="card">
-
-
-                <h2>
-                    {{ completedCourses.length }}
-                </h2>
-
-
-                <p>
-                    Завершено
-                </p>
-
-
-            </div>
-
-
-
-
-
-            <div class="card">
-
-
-                <h2>
-                    {{ averageProgress }}%
-                </h2>
-
-
-                <p>
-                    Прогрес
-                </p>
-
-
-            </div>
-
+            <p>
+                Прогрес
+            </p>
 
 
         </div>
@@ -188,11 +188,17 @@ function saveProfile() {
     </div>
 
 
+
+</div>
+
+
 </template>
 
 
 
 <style scoped>
+
+
 .profile {
 
     max-width: 800px;
@@ -203,13 +209,13 @@ function saveProfile() {
 
 .user-card {
 
-    display: flex;
+    display:flex;
 
-    align-items: center;
+    align-items:center;
 
-    gap: 20px;
+    gap:20px;
 
-    margin-bottom: 30px;
+    margin-bottom:30px;
 
 }
 
@@ -217,23 +223,23 @@ function saveProfile() {
 
 .avatar {
 
-    width: 80px;
+    width:80px;
 
-    height: 80px;
+    height:80px;
 
-    border-radius: 50%;
+    border-radius:50%;
 
-    background: #333;
+    background:#333;
 
-    color: white;
+    color:white;
 
-    display: flex;
+    display:flex;
 
-    align-items: center;
+    align-items:center;
 
-    justify-content: center;
+    justify-content:center;
 
-    font-size: 32px;
+    font-size:32px;
 
 }
 
@@ -241,11 +247,11 @@ function saveProfile() {
 
 .edit {
 
-    display: flex;
+    display:flex;
 
-    gap: 15px;
+    gap:15px;
 
-    margin-bottom: 40px;
+    margin-bottom:40px;
 
 }
 
@@ -253,11 +259,11 @@ function saveProfile() {
 
 input {
 
-    padding: 12px 15px;
+    padding:12px 15px;
 
-    border: 1px solid #ddd;
+    border:1px solid #ddd;
 
-    border-radius: 8px;
+    border-radius:8px;
 
 }
 
@@ -265,13 +271,13 @@ input {
 
 button {
 
-    padding: 12px 20px;
+    padding:12px 20px;
 
-    border: none;
+    border:none;
 
-    border-radius: 8px;
+    border-radius:8px;
 
-    cursor: pointer;
+    cursor:pointer;
 
 }
 
@@ -279,9 +285,9 @@ button {
 
 .stats {
 
-    display: flex;
+    display:flex;
 
-    gap: 20px;
+    gap:20px;
 
 }
 
@@ -289,15 +295,17 @@ button {
 
 .card {
 
-    width: 150px;
+    width:150px;
 
-    padding: 20px;
+    padding:20px;
 
-    border: 1px solid #ddd;
+    border:1px solid #ddd;
 
-    border-radius: 12px;
+    border-radius:12px;
 
-    text-align: center;
+    text-align:center;
 
 }
+
+
 </style>

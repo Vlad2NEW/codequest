@@ -1,201 +1,122 @@
 import { defineStore } from 'pinia'
-import { ref, computed } from 'vue'
-
+import { courses } from '../services/courses'
 import { saveCourses, getStoredCourses } from '../services/storage'
-import { useAuthStore } from './authStore'
 
 
-export const useCourseStore = defineStore('course', () => {
+export const useCourseStore = defineStore('course', {
+
+    state: () => ({
+        courses: getStoredCourses() || courses
+    }),
 
 
-    const authStore = useAuthStore()
+    getters: {
+
+        completedCourses(state) {
+            return state.courses.filter(
+                course => course.progress === 100
+            )
+        },
 
 
+        averageProgress(state) {
 
-    const courses = ref(
-        getStoredCourses() || []
-    )
+            if (!state.courses.length) {
+                return 0
+            }
 
+            const total = state.courses.reduce(
+                (sum, course) => sum + course.progress,
+                0
+            )
 
-
-    const userCourses = computed(() => {
-
-
-        if (!authStore.user) {
-
-            return []
-
+            return Math.round(
+                total / state.courses.length
+            )
         }
 
-
-        return courses.value.filter(
-            course =>
-                course.userId === authStore.user.id
-        )
-
-    })
+    },
 
 
+    actions: {
 
-    const completedCourses = computed(() => {
+        addCourse(course) {
 
+            this.courses.push({
+                id: Date.now(),
+                ...course,
+                progress: 0
+            })
 
-        return userCourses.value.filter(
-            course =>
-                course.progress === 100
-        )
-
-
-    })
-
-
-
-    const averageProgress = computed(() => {
+            saveCourses(this.courses)
+        },
 
 
-        if (!userCourses.value.length) {
+        updateProgress(id, progress) {
 
-            return 0
-
-        }
-
-
-
-        const total = userCourses.value.reduce(
-
-            (sum, course) =>
-                sum + course.progress,
-
-            0
-
-        )
+            const course = this.courses.find(
+                course => course.id === id
+            )
 
 
+            if (course) {
 
-        return Math.round(
-            total / userCourses.value.length
-        )
-
-
-    })
-
-
-
-
-
-    function addCourse(course){
-
-
-        const newCourse = {
-
-            id: Date.now(),
-
-            ...course,
-
-            progress:0,
-
-            userId:authStore.user.id
-
-        }
-
-
-
-        courses.value.push(newCourse)
-
-
-        saveCourses(
-            courses.value
-        )
-
-    }
-
-
-
-
-
-    function updateProgress(id, progress){
-
-
-        const course = courses.value.find(
-            item => item.id === id
-        )
-
-
-        if(course){
-
-            course.progress =
-                Math.min(
-                    Math.max(progress,0),
+                course.progress = Math.min(
+                    Math.max(progress, 0),
                     100
                 )
 
+                saveCourses(this.courses)
+            }
 
-            saveCourses(
-                courses.value
+        },
+
+
+        resetProgress(id) {
+
+            const course = this.courses.find(
+                course => course.id === id
             )
 
+
+            if (course) {
+
+                course.progress = 0
+
+                saveCourses(this.courses)
+            }
+
+        },
+
+
+        updateCourse(id, data) {
+
+            const course = this.courses.find(
+                course => course.id === id
+            )
+
+
+            if (course) {
+
+                course.title = data.title
+                course.level = data.level
+                course.description = data.description
+
+                saveCourses(this.courses)
+            }
+
+        },
+
+
+        deleteCourse(id) {
+
+            this.courses = this.courses.filter(
+                course => course.id !== id
+            )
+
+            saveCourses(this.courses)
         }
 
-
     }
-
-
-
-
-
-    function resetProgress(id){
-
-
-        updateProgress(id,0)
-
-
-    }
-
-
-
-
-
-    function deleteCourse(id){
-
-
-        courses.value =
-            courses.value.filter(
-                course =>
-                    course.id !== id
-            )
-
-
-        saveCourses(
-            courses.value
-        )
-
-    }
-
-
-
-
-
-    return {
-
-
-        courses,
-
-        userCourses,
-
-        completedCourses,
-
-        averageProgress,
-
-        addCourse,
-
-        updateProgress,
-
-        resetProgress,
-
-        deleteCourse
-
-
-    }
-
 
 })
