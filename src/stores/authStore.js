@@ -19,9 +19,7 @@ export const useAuthStore = defineStore('auth', () => {
     )
 
 
-    const isAuth = computed(() => {
-        return !!user.value
-    })
+    const isAuth = computed(() => !!user.value)
 
 
 
@@ -40,8 +38,11 @@ export const useAuthStore = defineStore('auth', () => {
         if (exists) {
 
             return {
+
                 success: false,
-                message: 'Такий email вже існує'
+
+                message: 'Такий email вже зареєстрований'
+
             }
 
         }
@@ -81,7 +82,9 @@ export const useAuthStore = defineStore('auth', () => {
 
 
         return {
+
             success: true
+
         }
 
     }
@@ -141,6 +144,51 @@ export const useAuthStore = defineStore('auth', () => {
 
 
 
+    function updateUser(data) {
+
+
+        user.value = {
+
+            ...user.value,
+
+            ...data
+
+        }
+
+
+
+        localStorage.setItem(
+            'auth',
+            JSON.stringify(user.value)
+        )
+
+
+
+        const index = users.value.findIndex(
+            item => item.id === user.value.id
+        )
+
+
+
+        if(index !== -1){
+
+            users.value[index] = user.value
+
+
+            localStorage.setItem(
+                'users',
+                JSON.stringify(users.value)
+            )
+
+        }
+
+
+    }
+
+
+
+
+
     function logout() {
 
 
@@ -150,7 +198,6 @@ export const useAuthStore = defineStore('auth', () => {
         localStorage.removeItem(
             'auth'
         )
-
 
     }
 
@@ -169,6 +216,8 @@ export const useAuthStore = defineStore('auth', () => {
         register,
 
         login,
+
+        updateUser,
 
         logout
 

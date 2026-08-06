@@ -8,6 +8,7 @@ import { useAuthStore } from '../stores/authStore'
 import { useCourseStore } from '../stores/courseStore'
 
 
+
 const authStore = useAuthStore()
 
 const courseStore = useCourseStore()
@@ -33,54 +34,26 @@ const name = ref(
 
 
 
-function saveProfile(){
+function saveProfile() {
 
 
-    const updatedUser = {
+    if (!name.value.trim()) {
 
-        ...user.value,
+        return
 
-        name:name.value,
+    }
 
-        avatar:name.value
+
+
+    authStore.updateUser({
+
+        name: name.value,
+
+        avatar: name.value
             .charAt(0)
             .toUpperCase()
 
-    }
-
-
-
-    user.value = updatedUser
-
-
-
-    localStorage.setItem(
-        'auth',
-        JSON.stringify(updatedUser)
-    )
-
-
-
-    const users = JSON.parse(
-        localStorage.getItem('users')
-    )
-
-
-    const index = users.findIndex(
-        item => item.id === updatedUser.id
-    )
-
-
-    if(index !== -1){
-
-        users[index] = updatedUser
-
-        localStorage.setItem(
-            'users',
-            JSON.stringify(users)
-        )
-
-    }
+    })
 
 
 }
@@ -89,114 +62,131 @@ function saveProfile(){
 </script>
 
 
-
 <template>
 
 
 <div class="profile">
 
 
-<div class="user-card">
+    <div class="user-card">
 
 
-<div class="avatar">
+        <div class="avatar">
 
-{{ user.avatar }}
+            {{ user.avatar }}
 
-</div>
-
-
-<div>
-
-<h1>
-{{ user.name }}
-</h1>
-
-
-<p>
-{{ user.email }}
-</p>
-
-
-<p>
-З нами з:
-{{ user.joined }}
-</p>
-
-
-</div>
-
-
-</div>
+        </div>
 
 
 
-<div class="edit">
+        <div>
+
+            <h1>
+                {{ user.name }}
+            </h1>
 
 
-<input
-v-model="name"
-/>
+            <p>
+                {{ user.email }}
+            </p>
 
 
-<button @click="saveProfile">
+            <p>
+                Зареєстрований:
+                {{ user.joined }}
+            </p>
 
-Зберегти
 
-</button>
+        </div>
 
 
-</div>
+    </div>
 
 
 
 
-<div class="stats">
+    <div class="edit">
 
 
-<div class="card">
-
-<h2>
-{{ courses.length }}
-</h2>
-
-<p>
-Курсів
-</p>
-
-</div>
+        <input
+            v-model="name"
+            placeholder="Нове ім'я"
+        >
 
 
+        <button @click="saveProfile">
 
-<div class="card">
+            Зберегти
 
-<h2>
-{{ completedCourses.length }}
-</h2>
+        </button>
 
-<p>
-Завершено
-</p>
 
-</div>
+    </div>
 
 
 
-<div class="card">
-
-<h2>
-{{ averageProgress }}%
-</h2>
-
-<p>
-Прогрес
-</p>
-
-</div>
 
 
+    <div class="stats">
 
-</div>
+
+        <div class="card">
+
+
+            <h2>
+                {{ courses.length }}
+            </h2>
+
+
+            <p>
+                Курсів
+            </p>
+
+
+        </div>
+
+
+
+
+
+        <div class="card">
+
+
+            <h2>
+                {{ completedCourses.length }}
+            </h2>
+
+
+            <p>
+                Завершено
+            </p>
+
+
+        </div>
+
+
+
+
+
+        <div class="card">
+
+
+            <h2>
+                {{ averageProgress }}%
+            </h2>
+
+
+            <p>
+                Прогрес
+            </p>
+
+
+        </div>
+
+
+
+    </div>
+
 
 
 </div>
@@ -208,9 +198,10 @@ v-model="name"
 
 <style scoped>
 
+
 .profile {
 
-max-width:800px;
+    max-width: 800px;
 
 }
 
@@ -218,13 +209,13 @@ max-width:800px;
 
 .user-card {
 
-display:flex;
+    display:flex;
 
-align-items:center;
+    align-items:center;
 
-gap:20px;
+    gap:20px;
 
-margin-bottom:30px;
+    margin-bottom:30px;
 
 }
 
@@ -232,23 +223,23 @@ margin-bottom:30px;
 
 .avatar {
 
-width:80px;
+    width:80px;
 
-height:80px;
+    height:80px;
 
-border-radius:50%;
+    border-radius:50%;
 
-background:#333;
+    background:#333;
 
-color:white;
+    color:white;
 
-display:flex;
+    display:flex;
 
-align-items:center;
+    align-items:center;
 
-justify-content:center;
+    justify-content:center;
 
-font-size:32px;
+    font-size:32px;
 
 }
 
@@ -256,11 +247,11 @@ font-size:32px;
 
 .edit {
 
-display:flex;
+    display:flex;
 
-gap:15px;
+    gap:15px;
 
-margin-bottom:40px;
+    margin-bottom:40px;
 
 }
 
@@ -268,11 +259,11 @@ margin-bottom:40px;
 
 input {
 
-padding:12px;
+    padding:12px 15px;
 
-border-radius:8px;
+    border:1px solid #ddd;
 
-border:1px solid #ddd;
+    border-radius:8px;
 
 }
 
@@ -280,13 +271,13 @@ border:1px solid #ddd;
 
 button {
 
-padding:12px 20px;
+    padding:12px 20px;
 
-border:none;
+    border:none;
 
-border-radius:8px;
+    border-radius:8px;
 
-cursor:pointer;
+    cursor:pointer;
 
 }
 
@@ -294,9 +285,9 @@ cursor:pointer;
 
 .stats {
 
-display:flex;
+    display:flex;
 
-gap:20px;
+    gap:20px;
 
 }
 
@@ -304,15 +295,15 @@ gap:20px;
 
 .card {
 
-width:150px;
+    width:150px;
 
-padding:20px;
+    padding:20px;
 
-border:1px solid #ddd;
+    border:1px solid #ddd;
 
-border-radius:12px;
+    border-radius:12px;
 
-text-align:center;
+    text-align:center;
 
 }
 
