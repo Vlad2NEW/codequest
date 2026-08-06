@@ -2,6 +2,9 @@
 import { ref, computed, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCourseStore } from '../stores/courseStore'
+import { useToastStore } from '../stores/toastStore'
+
+const toast = useToastStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -61,6 +64,7 @@ function save() {
         }
     )
 
+    toast.show('Курс оновлено')
 
     router.push(`/courses/${course.value.id}`)
 }

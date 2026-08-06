@@ -3,6 +3,9 @@ import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 import { useCourseStore } from '../stores/courseStore'
 import ProgressBar from '../components/common/ProgressBar.vue'
+import { useToastStore } from '../stores/toastStore'
+
+const toast = useToastStore()
 
 const route = useRoute()
 const router = useRouter()
@@ -17,8 +20,11 @@ const course = computed(() =>
 const reset = () => {
     if (course.value) {
         courseStore.resetProgress(course.value.id)
+
+        toast.show('Прогрес скинуто')
     }
 }
+
 
 const increaseProgress = () => {
     if (course.value) {
@@ -26,15 +32,32 @@ const increaseProgress = () => {
             course.value.id,
             course.value.progress + 10
         )
+
+        toast.show('Прогрес оновлено')
     }
 }
 
+
 const removeCourse = () => {
+
     if (course.value) {
+
+        const confirmDelete = confirm(
+            'Видалити цей курс?'
+        )
+
+        if (!confirmDelete) {
+            return
+        }
+
+
         courseStore.deleteCourse(course.value.id)
+
+        toast.show('Курс видалено')
 
         router.push('/courses')
     }
+
 }
 </script>
 

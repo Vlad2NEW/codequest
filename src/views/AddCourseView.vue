@@ -2,6 +2,9 @@
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 import { useCourseStore } from '../stores/courseStore'
+import { useToastStore } from '../stores/toastStore'
+
+const toast = useToastStore()
 
 const router = useRouter()
 const courseStore = useCourseStore()
@@ -26,6 +29,8 @@ function save() {
         level: level.value,
         description: description.value.trim()
     })
+
+    toast.show('Курс створено')
 
 
     router.push('/courses')
