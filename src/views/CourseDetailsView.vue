@@ -1,118 +1,307 @@
 <script setup>
+
 import { computed } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import { useCourseStore } from '../stores/courseStore'
-import ProgressBar from '../components/common/ProgressBar.vue'
-import { useToastStore } from '../stores/toastStore'
 
-const toast = useToastStore()
+import { useCourseStore } from '../stores/courseStore'
+import { useProgressStore } from '../stores/progressStore'
+
+import ProgressBar from '../components/common/ProgressBar.vue'
+
 
 const route = useRoute()
 const router = useRouter()
+
+
 const courseStore = useCourseStore()
+const progressStore = useProgressStore()
+
+
 
 const course = computed(() =>
+
     courseStore.courses.find(
-        course => course.id === Number(route.params.id)
+
+        course =>
+
+            course.id === Number(route.params.id)
+
     )
+
 )
 
-const reset = () => {
-    if (course.value) {
-        courseStore.resetProgress(course.value.id)
 
-        toast.show('Прогрес скинуто')
+
+const progress = computed(() => {
+
+
+    if (!course.value) {
+
+        return 0
+
     }
-}
 
 
-const increaseProgress = () => {
+    return progressStore.getProgress(
+        course.value.id
+    )
+
+})
+
+
+
+
+
+function increaseProgress() {
+
+
     if (course.value) {
-        courseStore.updateProgress(
+
+
+        progressStore.updateProgress(
+
             course.value.id,
-            course.value.progress + 10
+
+            progress.value + 10
+
         )
 
-        toast.show('Прогрес оновлено')
     }
+
 }
 
 
-const removeCourse = () => {
+
+
+
+function reset() {
+
 
     if (course.value) {
 
-        const confirmDelete = confirm(
-            'Видалити цей курс?'
+
+        progressStore.resetProgress(
+
+            course.value.id
+
         )
 
-        if (!confirmDelete) {
-            return
-        }
+    }
+
+}
 
 
-        courseStore.deleteCourse(course.value.id)
 
-        toast.show('Курс видалено')
+
+
+function removeCourse() {
+
+
+    if (course.value) {
+
+
+        courseStore.deleteCourse(
+
+            course.value.id
+
+        )
+
 
         router.push('/courses')
+
     }
 
 }
-</script>
 
-<template>
-    <div v-if="course">
-        <h1>{{ course.title }}</h1>
 
-        <p>Level: {{ course.level }}</p>
 
-        <ProgressBar :progress="course.progress" />
 
-        <p>{{ course.description }}</p>
 
-        <div class="actions">
-            <button @click="increaseProgress">
-                +10%
-            </button>
+function editCourse() {
 
-            <button @click="reset">
-                Скинути прогрес
-            </button>
 
-            <button @click="removeCourse">
-                Видалити курс
-            </button>
+    router.push(
 
-            <button @click="router.push(`/courses/${course.id}/edit`)">
-                Редагувати
-            </button>
-        </div>
+        `/courses/${course.value.id}/edit`
 
-    </div>
+    )
 
-    <div v-else>
-        <h1>Course not found</h1>
-    </div>
-</template>
-
-<style scoped>
-.actions {
-    display: flex;
-    gap: 20px;
-    margin-top: 20px;
 }
 
+
+</script>
+
+
+
+<template>
+
+
+    <div v-if="course" class="course-details">
+
+
+        <h1>
+            {{ course.title }}
+        </h1>
+
+
+
+        <p class="level">
+
+            Рівень:
+            {{ course.level }}
+
+        </p>
+
+
+
+
+        <ProgressBar :progress="progress" />
+
+
+
+
+        <p class="description">
+
+            {{ course.description }}
+
+        </p>
+
+
+
+
+        <div class="actions">
+
+
+            <button @click="increaseProgress">
+
+                +10%
+
+            </button>
+
+
+
+
+            <button @click="reset">
+
+                Скинути прогрес
+
+            </button>
+
+
+
+
+            <button @click="editCourse">
+
+                Редагувати
+
+            </button>
+
+
+
+
+            <button class="delete" @click="removeCourse">
+
+                Видалити
+
+            </button>
+
+
+
+        </div>
+
+
+    </div>
+
+
+
+    <div v-else>
+
+        <h1>
+            Course not found
+        </h1>
+
+    </div>
+
+
+</template>
+
+
+
+
+<style scoped>
+.course-details {
+
+    max-width: 700px;
+
+}
+
+
+
+.level {
+
+    color: #666;
+
+}
+
+
+
+.description {
+
+    margin-top: 25px;
+
+    line-height: 1.6;
+
+}
+
+
+
+.actions {
+
+
+    display: flex;
+
+    gap: 15px;
+
+    margin-top: 30px;
+
+    flex-wrap: wrap;
+
+
+}
+
+
+
 button {
-    padding: 10px 20px;
+
+
+    padding: 12px 20px;
 
     border: none;
+
     border-radius: 8px;
 
     cursor: pointer;
+
+    background: #333;
+
+    color: white;
+
+
 }
 
+
+
 button:hover {
-    opacity: 0.6;
+
+    opacity: 0.8;
+
+}
+
+
+
+.delete {
+
+    background: #c0392b;
+
 }
 </style>

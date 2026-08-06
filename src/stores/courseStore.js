@@ -2,107 +2,102 @@ import { defineStore } from 'pinia'
 import { ref, computed } from 'vue'
 
 import { courses as initialCourses } from '../services/courses'
-import { saveCourses, getStoredCourses } from '../services/storage'
-
-
-export const useCourseStore = defineStore('course', () => {
-
-
-    const courses = ref(
-        getStoredCourses() || initialCourses
-    )
+import {
+    saveCourses,
+    getStoredCourses
+} from '../services/storage'
 
 
 
-    const completedCourses = computed(() => {
-
-        return courses.value.filter(
-            course => course.progress === 100
-        )
-
-    })
+export const useCourseStore = defineStore(
+    'course',
+    () => {
 
 
+        const courses = ref(
 
-    const averageProgress = computed(() => {
-
-
-        if (!courses.value.length) {
-
-            return 0
-
-        }
-
-
-
-        const total = courses.value.reduce(
-
-            (sum, course) =>
-                sum + (course.progress || 0),
-
-            0
+            getStoredCourses()
+            ||
+            initialCourses
 
         )
 
 
-        return Math.round(
-            total / courses.value.length
-        )
-
-    })
 
 
 
+        const completedCourses = computed(() => {
 
 
-    function addCourse(course) {
+            return courses.value.filter(
 
+                course =>
+                    course.progress === 100
 
-        const newCourse = {
-
-            id: Date.now(),
-
-            title: course.title,
-
-            description: course.description,
-
-            level: course.level,
-
-            progress: 0
-
-        }
-
-
-
-        courses.value.push(newCourse)
-
-
-        saveCourses(
-            courses.value
-        )
-
-    }
-
-
-
-
-
-    function updateCourse(id, data) {
-
-
-        const course = courses.value.find(
-            course => course.id === id
-        )
-
-
-
-        if (course) {
-
-
-            Object.assign(
-                course,
-                data
             )
+
+
+        })
+
+
+
+
+
+        const averageProgress = computed(() => {
+
+
+            if (!courses.value.length) {
+
+                return 0
+
+            }
+
+
+
+            const total =
+                courses.value.reduce(
+
+                    (sum, course) =>
+
+                        sum +
+                        (course.progress || 0),
+
+                    0
+
+                )
+
+
+
+            return Math.round(
+
+                total /
+                courses.value.length
+
+            )
+
+
+        })
+
+
+
+
+
+
+
+        function addCourse(course) {
+
+
+            courses.value.push({
+
+                id: Date.now(),
+
+                title: course.title,
+
+                description: course.description,
+
+                level: course.level
+
+            })
 
 
 
@@ -110,52 +105,65 @@ export const useCourseStore = defineStore('course', () => {
                 courses.value
             )
 
+
         }
 
-    }
 
 
 
 
 
-    function deleteCourse(id) {
+
+        function updateCourse(id, data) {
 
 
-        courses.value =
-            courses.value.filter(
-                course =>
-                    course.id !== id
-            )
+            const course =
+                courses.value.find(
 
+                    course =>
+                        course.id === id
 
-
-        saveCourses(
-            courses.value
-        )
-
-    }
+                )
 
 
 
+            if (course) {
 
 
-    function updateProgress(id, progress) {
+                Object.assign(
+
+                    course,
+
+                    data
+
+                )
 
 
-        const course = courses.value.find(
-            course =>
-                course.id === id
-        )
+                saveCourses(
+                    courses.value
+                )
+
+            }
+
+
+        }
 
 
 
-        if (course) {
 
 
-            course.progress =
-                Math.min(
-                    Math.max(progress, 0),
-                    100
+
+
+        function deleteCourse(id) {
+
+
+            courses.value =
+
+                courses.value.filter(
+
+                    course =>
+                        course.id !== id
+
                 )
 
 
@@ -164,46 +172,32 @@ export const useCourseStore = defineStore('course', () => {
                 courses.value
             )
 
+
         }
 
-    }
 
 
 
 
 
-    function resetProgress(id) {
+
+        return {
 
 
-        updateProgress(id, 0)
+            courses,
 
-    }
+            completedCourses,
 
+            averageProgress,
 
+            addCourse,
 
+            updateCourse,
 
-
-    return {
-
-
-        courses,
-
-        completedCourses,
-
-        averageProgress,
-
-        addCourse,
-
-        updateCourse,
-
-        deleteCourse,
-
-        updateProgress,
-
-        resetProgress
+            deleteCourse
 
 
-    }
+        }
 
 
-})
+    })
