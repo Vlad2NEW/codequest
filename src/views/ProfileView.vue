@@ -3,235 +3,318 @@
 import { ref } from 'vue'
 import { storeToRefs } from 'pinia'
 
-import { useUserStore } from '../stores/userStore'
+
+import { useAuthStore } from '../stores/authStore'
 import { useCourseStore } from '../stores/courseStore'
 
 
-const userStore = useUserStore()
+const authStore = useAuthStore()
+
 const courseStore = useCourseStore()
 
 
-const { user } = storeToRefs(userStore)
+
+const { user } = storeToRefs(authStore)
+
+
 
 const {
     courses,
     completedCourses,
     averageProgress
+
 } = storeToRefs(courseStore)
 
 
-const name = ref(user.value.name)
+
+const name = ref(
+    user.value?.name || ''
+)
 
 
-function save() {
 
-    userStore.updateUser({
+function saveProfile(){
 
-        name: name.value,
 
-        avatar: name.value
+    const updatedUser = {
+
+        ...user.value,
+
+        name:name.value,
+
+        avatar:name.value
             .charAt(0)
             .toUpperCase()
 
-    })
+    }
+
+
+
+    user.value = updatedUser
+
+
+
+    localStorage.setItem(
+        'auth',
+        JSON.stringify(updatedUser)
+    )
+
+
+
+    const users = JSON.parse(
+        localStorage.getItem('users')
+    )
+
+
+    const index = users.findIndex(
+        item => item.id === updatedUser.id
+    )
+
+
+    if(index !== -1){
+
+        users[index] = updatedUser
+
+        localStorage.setItem(
+            'users',
+            JSON.stringify(users)
+        )
+
+    }
+
 
 }
+
 
 </script>
 
 
+
 <template>
 
-    <div class="profile">
+
+<div class="profile">
 
 
-        <div class="user-card">
-
-            <div class="avatar">
-                {{ user.avatar }}
-            </div>
+<div class="user-card">
 
 
-            <div>
+<div class="avatar">
 
-                <h1>
-                    {{ user.name }}
-                </h1>
+{{ user.avatar }}
 
-                <p>
-                    З нами з:
-                    {{ user.joined }}
-                </p>
-
-            </div>
-
-        </div>
+</div>
 
 
+<div>
 
-        <div class="form">
+<h1>
+{{ user.name }}
+</h1>
 
-            <input v-model="name" placeholder="Ім'я">
+
+<p>
+{{ user.email }}
+</p>
 
 
-            <button @click="save">
-                Зберегти
-            </button>
+<p>
+З нами з:
+{{ user.joined }}
+</p>
 
-        </div>
+
+</div>
+
+
+</div>
 
 
 
-        <div class="stats">
+<div class="edit">
 
 
-            <div class="card">
-
-                <h2>
-                    {{ courses.length }}
-                </h2>
-
-                <p>
-                    Курсів
-                </p>
-
-            </div>
+<input
+v-model="name"
+/>
 
 
-            <div class="card">
+<button @click="saveProfile">
 
-                <h2>
-                    {{ completedCourses.length }}
-                </h2>
+Зберегти
 
-                <p>
-                    Завершено
-                </p>
-
-            </div>
+</button>
 
 
-            <div class="card">
-
-                <h2>
-                    {{ averageProgress }}%
-                </h2>
-
-                <p>
-                    Прогрес
-                </p>
-
-            </div>
+</div>
 
 
-        </div>
 
 
-    </div>
+<div class="stats">
+
+
+<div class="card">
+
+<h2>
+{{ courses.length }}
+</h2>
+
+<p>
+Курсів
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>
+{{ completedCourses.length }}
+</h2>
+
+<p>
+Завершено
+</p>
+
+</div>
+
+
+
+<div class="card">
+
+<h2>
+{{ averageProgress }}%
+</h2>
+
+<p>
+Прогрес
+</p>
+
+</div>
+
+
+
+</div>
+
+
+</div>
+
 
 </template>
 
 
+
 <style scoped>
+
 .profile {
 
-    max-width: 700px;
+max-width:800px;
 
 }
+
 
 
 .user-card {
 
-    display: flex;
+display:flex;
 
-    align-items: center;
+align-items:center;
 
-    gap: 20px;
+gap:20px;
 
-    margin-bottom: 30px;
+margin-bottom:30px;
 
 }
+
 
 
 .avatar {
 
-    width: 70px;
+width:80px;
 
-    height: 70px;
+height:80px;
 
-    display: flex;
+border-radius:50%;
 
-    align-items: center;
+background:#333;
 
-    justify-content: center;
+color:white;
 
-    border-radius: 50%;
+display:flex;
 
-    background: #333;
+align-items:center;
 
-    color: white;
+justify-content:center;
 
-    font-size: 32px;
+font-size:32px;
+
+}
+
+
+
+.edit {
+
+display:flex;
+
+gap:15px;
+
+margin-bottom:40px;
 
 }
 
-
-
-.form {
-
-    display: flex;
-
-    gap: 15px;
-
-    margin-bottom: 30px;
-
-}
 
 
 input {
 
-    padding: 10px;
+padding:12px;
 
-    border-radius: 8px;
+border-radius:8px;
 
-    border: 1px solid #ddd;
+border:1px solid #ddd;
 
 }
+
 
 
 button {
 
-    padding: 10px 20px;
+padding:12px 20px;
 
-    border: none;
+border:none;
 
-    border-radius: 8px;
+border-radius:8px;
 
-    cursor: pointer;
+cursor:pointer;
 
 }
+
 
 
 .stats {
 
-    display: flex;
+display:flex;
 
-    gap: 20px;
+gap:20px;
 
 }
+
 
 
 .card {
 
-    padding: 20px;
+width:150px;
 
-    border: 1px solid #ddd;
+padding:20px;
 
-    border-radius: 12px;
+border:1px solid #ddd;
 
-    text-align: center;
+border-radius:12px;
 
-    width: 150px;
+text-align:center;
 
 }
+
+
 </style>
