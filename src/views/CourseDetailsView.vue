@@ -27,6 +27,14 @@ const increaseProgress = () => {
         )
     }
 }
+
+const removeCourse = () => {
+    if (course.value) {
+        courseStore.deleteCourse(course.value.id)
+
+        router.push('/courses')
+    }
+}
 </script>
 
 <template>
@@ -46,6 +54,10 @@ const increaseProgress = () => {
 
             <button @click="reset">
                 Скинути прогрес
+            </button>
+
+            <button @click="removeCourse">
+                Видалити курс
             </button>
         </div>
 

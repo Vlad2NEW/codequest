@@ -53,6 +53,14 @@ export const useCourseStore = defineStore('course', {
             })
 
             saveCourses(this.courses)
+        },
+
+        deleteCourse(id) {
+            this.courses = this.courses.filter(
+                course => course.id !== id
+            )
+
+            saveCourses(this.courses)
         }
     }
 })
