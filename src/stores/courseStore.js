@@ -9,6 +9,19 @@ export const useCourseStore = defineStore('course', {
     getters: {
         completedCourses(state) {
             return state.courses.filter(course => course.progress === 100)
+        },
+
+        averageProgress(state) {
+            if (!state.courses.length) {
+                return 0
+            }
+
+            const total = state.courses.reduce(
+                (sum, course) => sum + course.progress,
+                0
+            )
+
+            return Math.round(total / state.courses.length)
         }
     },
 
