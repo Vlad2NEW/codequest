@@ -15,14 +15,19 @@
 
 <script setup>
 import CourseCard from '../components/courses/CourseCard.vue'
-import { getCourses } from '../services/courses'
 import { ref, computed } from 'vue'
+import { storeToRefs } from 'pinia'
 
-const courses = getCourses()
+import { useCourseStore } from '../stores/courseStore'
+
+const courseStore = useCourseStore()
+
+const { courses } = storeToRefs(courseStore)
+
 const search = ref('')
 
 const filteredCourses = computed(() => {
-    return courses.filter(course =>
+    return courses.value.filter(course =>
         course.title.toLowerCase().includes(search.value.toLowerCase())
     )
 })

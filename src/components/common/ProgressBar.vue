@@ -1,7 +1,12 @@
 <script setup>
+import { computed } from 'vue';
 defineProps({
     progress: Number
 })
+
+const safeProgress = computed(() =>
+    Math.min(Math.max(props.progress, 0), 100)
+)
 </script>
 
 <template>
