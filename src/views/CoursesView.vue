@@ -8,8 +8,11 @@ import { useCourseStore } from '../stores/courseStore'
 
 const courseStore = useCourseStore()
 
-const { courses } = storeToRefs(courseStore)
+const {
+    userCourses
+} = storeToRefs(courseStore)
 
+const courses = userCourses
 
 const search = ref('')
 
