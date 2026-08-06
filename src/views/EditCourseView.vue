@@ -8,55 +8,86 @@ const router = useRouter()
 
 const courseStore = useCourseStore()
 
+
 const course = computed(() =>
     courseStore.courses.find(
         course => course.id === Number(route.params.id)
     )
 )
 
+
 const title = ref('')
 const level = ref('Beginner')
 const description = ref('')
+
+const error = ref('')
 
 
 watch(
     course,
     (value) => {
+
         if (value) {
+
             title.value = value.title
             level.value = value.level
             description.value = value.description
+
         }
+
     },
-    { immediate: true }
+    {
+        immediate: true
+    }
 )
 
 
 function save() {
-    if (!course.value) {
+
+    if (!title.value.trim()) {
+
+        error.value = 'Введіть назву курсу'
+
         return
     }
+
 
     courseStore.updateCourse(
         course.value.id,
         {
-            title: title.value,
+            title: title.value.trim(),
             level: level.value,
-            description: description.value
+            description: description.value.trim()
         }
     )
 
+
     router.push(`/courses/${course.value.id}`)
 }
+
 </script>
 
 
 <template>
+
     <div v-if="course">
 
         <h1>Редагувати курс</h1>
 
-        <form class="form" @submit.prevent="save">
+
+        <form
+            class="form"
+            @submit.prevent="save"
+        >
+
+
+            <p
+                v-if="error"
+                class="error"
+            >
+                {{ error }}
+            </p>
+
 
             <input
                 v-model="title"
@@ -80,7 +111,7 @@ function save() {
 
             <textarea
                 v-model="description"
-                placeholder="Опис курсу"
+                placeholder="Опис курсу (необов'язково)"
             ></textarea>
 
 
@@ -100,21 +131,29 @@ function save() {
 
             </div>
 
+
         </form>
+
 
     </div>
 
 
     <div v-else>
+
         <h1>Course not found</h1>
+
     </div>
+
 </template>
 
 
 <style scoped>
+
 .form {
+
     display: flex;
     flex-direction: column;
+
     gap: 20px;
 
     width: 350px;
@@ -122,61 +161,90 @@ function save() {
     padding: 25px;
 
     border: 1px solid #ddd;
+
     border-radius: 12px;
+
 }
 
 
 input,
 select,
 textarea {
+
     padding: 12px 15px;
 
     border: 1px solid #ddd;
+
     border-radius: 8px;
 
     font-size: 16px;
+
     font-family: inherit;
+
 }
 
 
 textarea {
+
     min-height: 120px;
 
     resize: vertical;
+
 }
 
 
 input:focus,
 select:focus,
 textarea:focus {
+
     outline: none;
 
     border-color: #333;
+
 }
 
 
 .actions {
+
     display: flex;
+
     gap: 15px;
+
 }
 
 
 button {
+
     padding: 12px 20px;
 
     border: none;
+
     border-radius: 8px;
 
     background: #333;
+
     color: white;
 
     cursor: pointer;
 
     transition: opacity 0.2s;
+
 }
 
 
 button:hover {
+
     opacity: 0.8;
+
 }
+
+
+.error {
+
+    color: #d11;
+
+    margin: 0;
+
+}
+
 </style>
