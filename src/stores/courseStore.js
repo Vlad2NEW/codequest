@@ -35,9 +35,16 @@ export const useCourseStore = defineStore('course', {
 
                 saveCourses(this.courses)
             }
-        }
-    },
+        },
+        resetProgress(id) {
+            const course = this.courses.find(course => course.id === id)
 
-    
+            if (course) {
+                course.progress = 0
+
+                saveCourses(this.courses)
+            }
+        }
+    }
 })
 
