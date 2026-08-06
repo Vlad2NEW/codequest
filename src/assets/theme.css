@@ -1,0 +1,53 @@
+body {
+
+    background: white;
+
+    color: #222;
+
+    transition: 0.3s;
+
+}
+
+
+body.dark {
+
+    background: #181818;
+
+    color: #eee;
+
+}
+
+
+
+body.dark .card,
+body.dark .course {
+
+    background: #242424;
+
+    border-color: #444;
+
+}
+
+
+
+body.dark input,
+body.dark select,
+body.dark textarea {
+
+    background: #242424;
+
+    color: white;
+
+    border-color: #555;
+
+}
+
+
+
+body.dark button {
+
+    background: #333;
+
+    color: white;
+
+}
