@@ -1,9 +1,16 @@
 import { defineStore } from 'pinia'
 import { courses } from '../services/courses'
 
+function saveCourses(courses) {
+        localStorage.setItem(
+            'courses',
+            JSON.stringify(courses)
+        )
+    }
+
 export const useCourseStore = defineStore('course', {
     state: () => ({
-        courses: courses
+        courses: JSON.parse(localStorage.getItem('courses')) || courses
     }),
 
     getters: {
@@ -31,7 +38,12 @@ export const useCourseStore = defineStore('course', {
 
             if (course) {
                 course.progress = Math.min(Math.max(progress, 0), 100)
+
+                saveCourses(this.courses)
             }
         }
-    }
+    },
+
+    
 })
+
