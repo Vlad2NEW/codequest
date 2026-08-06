@@ -20,7 +20,11 @@ const menuItems = [
     {
         title: "Профіль",
         path: "/profile"
-    }
+    },
+    {
+    title: "Додати курс",
+    path: "/add-course"
+}
 ];
 
 </script>

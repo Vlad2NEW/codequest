@@ -44,6 +44,15 @@ export const useCourseStore = defineStore('course', {
 
                 saveCourses(this.courses)
             }
+        },
+        addCourse(course) {
+            this.courses.push({
+                id: Date.now(),
+                ...course,
+                progress: 0
+            })
+
+            saveCourses(this.courses)
         }
     }
 })
