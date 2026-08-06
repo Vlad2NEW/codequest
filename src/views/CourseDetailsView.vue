@@ -1,10 +1,11 @@
 <script setup>
 import { computed } from 'vue'
-import { useRoute } from 'vue-router'
+import { useRoute, useRouter } from 'vue-router'
 import { useCourseStore } from '../stores/courseStore'
 import ProgressBar from '../components/common/ProgressBar.vue'
 
 const route = useRoute()
+const router = useRouter()
 const courseStore = useCourseStore()
 
 const course = computed(() =>
@@ -58,6 +59,10 @@ const removeCourse = () => {
 
             <button @click="removeCourse">
                 Видалити курс
+            </button>
+
+            <button @click="router.push(`/courses/${course.id}/edit`)">
+                Редагувати
             </button>
         </div>
 
