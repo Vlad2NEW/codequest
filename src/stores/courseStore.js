@@ -1,16 +1,10 @@
 import { defineStore } from 'pinia'
 import { courses } from '../services/courses'
-
-function saveCourses(courses) {
-        localStorage.setItem(
-            'courses',
-            JSON.stringify(courses)
-        )
-    }
+import { saveCourses, getStoredCourses } from '../services/storage'
 
 export const useCourseStore = defineStore('course', {
     state: () => ({
-        courses: JSON.parse(localStorage.getItem('courses')) || courses
+        courses: getStoredCourses() || courses
     }),
 
     getters: {
