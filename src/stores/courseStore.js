@@ -1,122 +1,209 @@
 import { defineStore } from 'pinia'
-import { courses } from '../services/courses'
+import { ref, computed } from 'vue'
+
+import { courses as initialCourses } from '../services/courses'
 import { saveCourses, getStoredCourses } from '../services/storage'
 
 
-export const useCourseStore = defineStore('course', {
-
-    state: () => ({
-        courses: getStoredCourses() || courses
-    }),
+export const useCourseStore = defineStore('course', () => {
 
 
-    getters: {
-
-        completedCourses(state) {
-            return state.courses.filter(
-                course => course.progress === 100
-            )
-        },
+    const courses = ref(
+        getStoredCourses() || initialCourses
+    )
 
 
-        averageProgress(state) {
 
-            if (!state.courses.length) {
-                return 0
-            }
+    const completedCourses = computed(() => {
 
-            const total = state.courses.reduce(
-                (sum, course) => sum + course.progress,
-                0
-            )
+        return courses.value.filter(
+            course => course.progress === 100
+        )
 
-            return Math.round(
-                total / state.courses.length
-            )
+    })
+
+
+
+    const averageProgress = computed(() => {
+
+
+        if (!courses.value.length) {
+
+            return 0
+
         }
 
-    },
 
 
-    actions: {
+        const total = courses.value.reduce(
 
-        addCourse(course) {
+            (sum, course) =>
+                sum + (course.progress || 0),
 
-            this.courses.push({
-                id: Date.now(),
-                ...course,
-                progress: 0
-            })
+            0
 
-            saveCourses(this.courses)
-        },
+        )
 
 
-        updateProgress(id, progress) {
+        return Math.round(
+            total / courses.value.length
+        )
 
-            const course = this.courses.find(
-                course => course.id === id
+    })
+
+
+
+
+
+    function addCourse(course) {
+
+
+        const newCourse = {
+
+            id: Date.now(),
+
+            title: course.title,
+
+            description: course.description,
+
+            level: course.level,
+
+            progress: 0
+
+        }
+
+
+
+        courses.value.push(newCourse)
+
+
+        saveCourses(
+            courses.value
+        )
+
+    }
+
+
+
+
+
+    function updateCourse(id, data) {
+
+
+        const course = courses.value.find(
+            course => course.id === id
+        )
+
+
+
+        if (course) {
+
+
+            Object.assign(
+                course,
+                data
             )
 
 
-            if (course) {
 
-                course.progress = Math.min(
+            saveCourses(
+                courses.value
+            )
+
+        }
+
+    }
+
+
+
+
+
+    function deleteCourse(id) {
+
+
+        courses.value =
+            courses.value.filter(
+                course =>
+                    course.id !== id
+            )
+
+
+
+        saveCourses(
+            courses.value
+        )
+
+    }
+
+
+
+
+
+    function updateProgress(id, progress) {
+
+
+        const course = courses.value.find(
+            course =>
+                course.id === id
+        )
+
+
+
+        if (course) {
+
+
+            course.progress =
+                Math.min(
                     Math.max(progress, 0),
                     100
                 )
 
-                saveCourses(this.courses)
-            }
-
-        },
 
 
-        resetProgress(id) {
-
-            const course = this.courses.find(
-                course => course.id === id
+            saveCourses(
+                courses.value
             )
 
-
-            if (course) {
-
-                course.progress = 0
-
-                saveCourses(this.courses)
-            }
-
-        },
-
-
-        updateCourse(id, data) {
-
-            const course = this.courses.find(
-                course => course.id === id
-            )
-
-
-            if (course) {
-
-                course.title = data.title
-                course.level = data.level
-                course.description = data.description
-
-                saveCourses(this.courses)
-            }
-
-        },
-
-
-        deleteCourse(id) {
-
-            this.courses = this.courses.filter(
-                course => course.id !== id
-            )
-
-            saveCourses(this.courses)
         }
 
     }
+
+
+
+
+
+    function resetProgress(id) {
+
+
+        updateProgress(id, 0)
+
+    }
+
+
+
+
+
+    return {
+
+
+        courses,
+
+        completedCourses,
+
+        averageProgress,
+
+        addCourse,
+
+        updateCourse,
+
+        deleteCourse,
+
+        updateProgress,
+
+        resetProgress
+
+
+    }
+
 
 })
